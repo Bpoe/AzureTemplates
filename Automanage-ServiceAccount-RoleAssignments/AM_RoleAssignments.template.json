@@ -4,6 +4,7 @@
   "parameters": {
   },
   "variables": {
+    "role_customAutomanage_id": "fc2022d7-1074-4ec5-823c-2e5e691c4e1a",
     "role_VmContributor": "/providers/Microsoft.Authorization/roleDefinitions/9980e02c-c2be-4d73-94e8-173b1dc7cf3c",
     "role_automationContributor": "/providers/Microsoft.Authorization/roleDefinitions/f353d9bd-d4a6-484e-a77a-8050b599b867",
     "role_arcMachineAdmin": "/providers/Microsoft.Authorization/roleDefinitions/cd570a14-e51a-42ad-bac8-bafd67325302",
@@ -14,6 +15,43 @@
     "seed": "AzureAutomanage"
   },
   "resources": [
+    {
+      "type": "Microsoft.Authorization/roleDefinitions",
+      "apiVersion": "2022-04-01",
+      "name": "[variables('role_customAutomanage_id')]",
+      "properties": {
+        "roleName": "Automanage Supplemental Permissions",
+        "assignableScopes": [
+          "[subscription().id]"
+        ],
+        "description": "Permissions that are needed by the Automanage service that are not present in other built-in roles.",
+        "permissions": [
+          {
+            "actions": [
+              "Microsoft.Resources/subscriptions/resourceGroups/read",
+              "Microsoft.Resources/subscriptions/resourceGroups/write",
+              "Microsoft.Security/settings/read",
+              "Microsoft.Security/settings/write"
+            ],
+            "dataActions": [],
+            "notActions": [],
+            "notDataActions": []
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "name": "[guid(subscription().id, variables('seed'), variables('role_customAutomanage_id'))]",
+      "apiVersion": "2022-04-01",
+      "properties": {
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('role_customAutomanage_id'))]",
+        "principalId": "[reference(subscriptionResourceId('Microsoft.Automanage/servicePrincipals', 'default'), '2022-05-04', 'Full').properties.servicePrincipalId]"
+      },
+      "dependsOn": [
+        "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('role_customAutomanage_id'))]"
+      ]
+    },
     {
       "type": "Microsoft.Authorization/roleAssignments",
       "name": "[guid(subscription().id, variables('seed'), variables('role_VmContributor'))]",
