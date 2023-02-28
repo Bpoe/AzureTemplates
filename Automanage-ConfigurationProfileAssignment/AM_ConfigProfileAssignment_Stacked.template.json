@@ -33,9 +33,9 @@
     "contosoRecommendedProfile": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/ContosoConfiguration/providers/Microsoft.Automanage/configurationProfiles/Contoso-Recommended",
     "contosoRequiredProfile": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/ContosoConfiguration/providers/Microsoft.Automanage/configurationProfiles/Contoso-Required",
     "profiles": "[union(
-      variables('contosoRequiredProfile'),
+      createArray(variables('contosoRequiredProfile')),
       parameters('additionalConfigurationProfiles'),
-      variables('contosoRecommendedProfile'))]"
+      createArray(variables('contosoRecommendedProfile')))]"
   },
   "resources": [
     {
