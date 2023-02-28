@@ -10,6 +10,7 @@
     "role_monitoringContributor": "/providers/Microsoft.Authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa",
     "role_wacAdmin": "/providers/Microsoft.Authorization/roleDefinitions/a6333a3e-0164-44c3-b281-7a577aff287f",
     "role_policyContributor": "/providers/Microsoft.Authorization/roleDefinitions/36243c78-bf99-498c-9df9-86d9f8d28608",
+    "role_logAnalyticsContributor": "92aaf0da-9dab-42b6-94a3-d43ce8d16293",
     "seed": "AzureAutomanage"
   },
   "resources": [
@@ -37,6 +38,15 @@
       "apiVersion": "2022-04-01",
       "properties": {
         "roleDefinitionId": "[variables('role_monitoringContributor')]",
+        "principalId": "[reference(subscriptionResourceId('Microsoft.Automanage/servicePrincipals', 'default'), '2022-05-04', 'Full').properties.servicePrincipalId]"
+      }
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "name": "[guid(subscription().id, variables('seed'), variables('role_logAnalyticsContributor'))]",
+      "apiVersion": "2022-04-01",
+      "properties": {
+        "roleDefinitionId": "[variables('role_logAnalyticsContributor')]",
         "principalId": "[reference(subscriptionResourceId('Microsoft.Automanage/servicePrincipals', 'default'), '2022-05-04', 'Full').properties.servicePrincipalId]"
       }
     },

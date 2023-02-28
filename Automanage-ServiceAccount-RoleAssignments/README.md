@@ -2,10 +2,7 @@
 This template will create role assignments that grant the minimum viable permissions for Azure Automanage to manage resources.
 
 ## Known Missing Permissions
-- Microsoft.OperationalInsights/workspaces/configurationScopes
-- Microsoft.OperationalInsights/workspaces/dataSources
-- Microsoft.OperationalInsights/workspaces/linkedServices
-- Microsoft.OperationsManagement/solutions
+- Microsoft.Resources/subscriptions/resourceGroups
 - Microsoft.Security/settings
 
 **Note**: This has NOT be thoroughly test and is not supported by Microsoft or myself in any way. Use at your own risk.
