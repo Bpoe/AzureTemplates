@@ -1,0 +1,62 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "machineName": {
+      "type": "string"
+    },
+    "resourceType": {
+      "type": "string",
+      "allowedValues": [
+        "Microsoft.Compute/virtualMachines",
+        "Microsoft.HybridCompute/machines"
+      ],
+      "metadata": {
+        "description": "The type of machine (Azure Virtual Machine or Arc for Servers)."
+      },
+      "defaultValue": "Microsoft.Compute/virtualMachines"
+    },
+    "additionalConfigurationProfiles": {
+      "type": "array",
+      "defaultValue": []
+    },
+    "mode": {
+      "type": "string",
+      "allowedValues": [
+        "Audit",
+        "ApplyAndAutoCorrect"
+      ],
+      "defaultValue": "Audit"
+    }
+  },
+  "variables": {
+    "contosoRecommendedProfile": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/ContosoConfiguration/providers/Microsoft.Automanage/configurationProfiles/Contoso-Recommended",
+    "contosoRequiredProfile": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/ContosoConfiguration/providers/Microsoft.Automanage/configurationProfiles/Contoso-Required",
+    "profiles": "[union(
+      variables('contosoRequiredProfile'),
+      parameters('additionalConfigurationProfiles'),
+      variables('contosoRecommendedProfile'))]"
+  },
+  "resources": [
+    {
+      "condition": "[equals(parameters('resourceType'), 'Microsoft.Compute/virtualMachines')]",
+      "type": "Microsoft.Compute/virtualMachines/providers/configurationProfileAssignments",
+      "apiVersion": "2023-03-31-preview",
+      "name": "[concat(parameters('machineName'), '/Microsoft.Automanage/default')]",
+      "properties": {
+          "configurationProfiles": "[variables('profiles')]",
+          "mode": "[parameters('mode')]"
+      }
+    },
+    {
+      "condition": "[equals(parameters('resourceType'), 'Microsoft.HybridCompute/machines')]",
+      "type": "Microsoft.HybridCompute/machines/providers/configurationProfileAssignments",
+      "apiVersion": "2023-03-31-preview",
+      "name": "[concat(parameters('machineName'), '/Microsoft.Automanage/default')]",
+      "properties": {
+          "configurationProfiles": "[variables('profiles')]",
+          "mode": "[parameters('mode')]"
+      }
+    }
+  ]
+}
