@@ -81,7 +81,7 @@
     {
       "condition": "[equals(parameters('resourceType'), 'Microsoft.HybridCompute/machines')]",
       "type": "Microsoft.HybridCompute/machines/providers/configurationProfileAssignments",
-      "apiVersion": "2023-03-31-preview",
+      "apiVersion": "2023-04-01-preview",
       "name": "[concat(parameters('machineName'), '/Microsoft.Automanage/default')]",
       "properties": {
         "configurationProfiles": [
