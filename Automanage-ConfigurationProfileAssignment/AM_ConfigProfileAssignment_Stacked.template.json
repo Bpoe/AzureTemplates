@@ -15,37 +15,67 @@
         "description": "The type of machine (Azure Virtual Machine or Arc for Servers)."
       },
       "defaultValue": "Microsoft.Compute/virtualMachines"
-    },
-    "additionalConfigurationProfiles": {
-      "type": "array",
-      "defaultValue": []
-    },
-    "mode": {
-      "type": "string",
-      "allowedValues": [
-        "Audit",
-        "ApplyAndAutoCorrect"
-      ],
-      "defaultValue": "Audit"
     }
   },
   "variables": {
-    "contosoRecommendedProfile": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/ContosoConfiguration/providers/Microsoft.Automanage/configurationProfiles/Contoso-Recommended",
-    "contosoRequiredProfile": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/ContosoConfiguration/providers/Microsoft.Automanage/configurationProfiles/Contoso-Required",
-    "profiles": "[union(
-      createArray(variables('contosoRequiredProfile')),
-      parameters('additionalConfigurationProfiles'),
-      createArray(variables('contosoRecommendedProfile')))]"
   },
   "resources": [
     {
+      "type": "Microsoft.Automanage/configurationProfiles",
+      "apiVersion": "2022-05-04",
+      "name": "Contoso-Required",
+      "properties": {
+        "configuration": {
+          "Antimalware/Enable": true,
+          "AzureSecurityBaseline/Enable": true,
+          "LogAnalytics/Enabled": true
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Automanage/configurationProfiles",
+      "apiVersion": "2022-05-04",
+      "name": "Contoso-Recommended",
+      "properties": {
+        "configuration": {
+          "Antimalware/Enable": true,
+          "Antimalware/AssignmentType": "ApplyAndAutoCorrect",
+          "Backup/Enabled": true
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Automanage/configurationProfiles",
+      "apiVersion": "2022-05-04",
+      "name": "AppTeam",
+      "properties": {
+        "configuration": {
+          "Antimalware/Enable": true,
+          "Antimalware/AssignmentType": "Audit",
+          "LogAnalytics/Workspace": "/subscriptions/abc123/resourceGroups/ContosoIT/providers/Microsoft.OperationalInsights/workspaces/Contoso-Central"
+        }
+      }
+    },
+    {
       "condition": "[equals(parameters('resourceType'), 'Microsoft.Compute/virtualMachines')]",
       "type": "Microsoft.Compute/virtualMachines/providers/configurationProfileAssignments",
-      "apiVersion": "2023-03-31-preview",
+      "apiVersion": "2023-04-01-preview",
       "name": "[concat(parameters('machineName'), '/Microsoft.Automanage/default')]",
       "properties": {
-          "configurationProfiles": "[variables('profiles')]",
-          "mode": "[parameters('mode')]"
+        "configurationProfiles": [
+          {
+            "configurationProfile": "[resourceId('Microsoft.Automanage/configurationProfiles', 'Contoso-Required')]",
+            "priority": 0
+          },
+          {
+            "configurationProfile": "[resourceId('Microsoft.Automanage/configurationProfiles', 'AppTeam')]",
+            "priority": 100
+          },
+          {
+            "configurationProfile": "[resourceId('Microsoft.Automanage/configurationProfiles', 'Contoso-Recommended')]",
+            "priority": 1000
+          }
+        ]
       }
     },
     {
@@ -54,8 +84,20 @@
       "apiVersion": "2023-03-31-preview",
       "name": "[concat(parameters('machineName'), '/Microsoft.Automanage/default')]",
       "properties": {
-          "configurationProfiles": "[variables('profiles')]",
-          "mode": "[parameters('mode')]"
+        "configurationProfiles": [
+          {
+            "configurationProfile": "[resourceId('Microsoft.Automanage/configurationProfiles', 'Contoso-Required')]",
+            "priority": 0
+          },
+          {
+            "configurationProfile": "[resourceId('Microsoft.Automanage/configurationProfiles', 'AppTeam')]",
+            "priority": 100
+          },
+          {
+            "configurationProfile": "[resourceId('Microsoft.Automanage/configurationProfiles', 'Contoso-Recommended')]",
+            "priority": 1000
+          }
+        ]
       }
     }
   ]
