@@ -14,7 +14,8 @@
       "properties": {
         "roleName": "Automanage Operator",
         "assignableScopes": [
-          "[subscription().id]"
+          "[subscription().id]",
+          "[concat('/providers/Microsoft.Management/managementGroups/', subscription().tenantId)]"
         ],
         "description": "Lets you create and assign configuration profiles",
         "permissions": [
