@@ -4,3 +4,7 @@ This template will create role assignments that grant the minimum viable permiss
 **Note**: This has NOT be thoroughly test and is not supported by Microsoft or myself in any way. Use at your own risk.
 
 [![Deploy To Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FBpoe%2FAzureTemplates%2Fmain%2FAutomanage-ServiceAccount-RoleAssignments%2FAM_RoleAssignments.template.json)
+
+Alternatively, assign the Automanage application Contributor access to the subscription.
+
+[![Deploy To Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FBpoe%2FAzureTemplates%2Fmain%2FAutomanage-ServiceAccount-RoleAssignments%2FAM_ContributorRoleAssignments.template.json)
