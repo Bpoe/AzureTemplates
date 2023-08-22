@@ -17,11 +17,11 @@
           "[subscription().id]",
           "[concat('/providers/Microsoft.Management/managementGroups/', subscription().tenantId)]"
         ],
-        "description": "Lets you create and assign configuration profiles",
+        "description": "Allows you to create and assign configuration profiles",
         "permissions": [
           {
             "actions": [
-              "Microsoft.Automanage/configurationProfile/*",
+              "Microsoft.Automanage/configurationProfiles/*",
               "Microsoft.Automanage/configurationProfileAssignments/*",
               "Microsoft.Compute/virtualMachines/read",
               "Microsoft.HybridCompute/machines/read",
